@@ -64,10 +64,22 @@ pipeline {
                 sh "kubectl apply -f deployment.yaml"
             }
         }
-
         stage('Verify Deployment') {
             steps {
-                sh "kubectl get pods"
+                sh "kubectl rollout status deployment/java-demo"
+            }
+        }
+
+        stage('Rollback if Failed') {
+            steps {
+                script {
+                    def status = sh(script: "kubectl rollout status deployment/java-demo", returnStatus: true)
+        
+                    if (status != 0) {
+                        sh "kubectl rollout undo deployment/java-demo"
+                        error "Deployment failed. Rolled back."
+                    }
+                }
             }
         }
 
