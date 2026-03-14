@@ -1,28 +1,22 @@
-Developer
-   │
-   │ push code
-   ▼
-GitHub Repository
-   │
-   │ webhook
-   ▼
+Developer Push
+      │
+      ▼
+GitHub Webhook
+      │
+      ▼
 Jenkins Pipeline
-   │
-   ├── Checkout Code
-   ├── Maven Build
-   ├── SonarQube Scan
-   │       │
-   │       └── Quality Gate
-   │             │
-   │             └── PASS
-   │
-   ├── Build Docker Image
-   ├── Push to DockerHub
-   ├── Update Kubernetes Manifest
-   │
-   ▼
-Kubernetes Cluster
-   │
-   └── Deploy Pod
-         │
-         └── Application Running
+      │
+      ├── Checkout
+      ├── Maven Build
+      ├── SonarQube Scan
+      ├── Quality Gate
+      │
+      ├── Docker Build
+      ├── Docker Push
+      │
+      ├── Update Kubernetes Manifest
+      ├── kubectl apply
+      │
+      ├── kubectl rollout status
+      │
+      └── Auto Rollback if Failure
