@@ -3,8 +3,8 @@ pipeline {
     agent any
 
     environment {
-
-        DOCKER_IMAGE = "dockerhub-user/java-demo"
+        DOCKERHUB_USER = "naveen352"
+        DOCKER_IMAGE = ""$DOCKERHUB_USER"/java-demo"
         VERSION = "v${BUILD_NUMBER}"
 
     }
@@ -52,13 +52,13 @@ pipeline {
                 }
             }
         }
-
+        
         stage('Update Manifest') {
             steps {
                 sh "./scripts/update_image.sh $VERSION"
             }
         }
-
+        /*
         stage('Deploy to Kubernetes') {
             steps {
                 sh "kubectl apply -f deployment.yaml"
@@ -82,6 +82,6 @@ pipeline {
                 }
             }
         }
-
+            */
     }
 }

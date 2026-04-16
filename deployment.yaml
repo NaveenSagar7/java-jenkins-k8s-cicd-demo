@@ -25,21 +25,21 @@ spec:
       containers:
 
       - name: java-demo
-        image: dockerhub-user/java-demo:latest
+        image: naveen352/java-demo:latest
 
         ports:
-        - containerPort: 8080
+        - containerPort: 8081
 
         readinessProbe:
           httpGet:
             path: /
-            port: 8080
+            port: 8081
           initialDelaySeconds: 5
           periodSeconds: 5
 
         livenessProbe:
           httpGet:
             path: /
-            port: 8080
+            port: 8081
           initialDelaySeconds: 15
           periodSeconds: 20
