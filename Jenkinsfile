@@ -10,13 +10,13 @@ pipeline {
     }
 
     stages {
-
+        /*
         stage('Checkout') {
             steps {
                 git 'https://github.com/username/java-jenkins-k8s-cicd-demo.git'
             }
         }
-
+            */
         stage('Build') {
             steps {
                 sh 'mvn clean package'
