@@ -56,6 +56,13 @@ pipeline {
                 sh "./scripts/update_image.sh $VERSION"
             }
         }
+
+
+        stage('Run in Docker container in the jenkins agent') {
+            steps {
+                sh "docker run -d -p 8081:8081 $DOCKER_IMAGE:$VERSION"
+            }
+        }
         /*
         stage('Deploy to Kubernetes') {
             steps {
