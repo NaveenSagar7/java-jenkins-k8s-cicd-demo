@@ -64,7 +64,7 @@ public class App {
 
                     "<div class='header'>Football Live</div>" +
 
-                    "<div class='subtext'>Welcome to Football Live where you do not miss any update</div>" +
+                    "<div class='subtext'>Welcome to Football Live where you do not miss any update !</div>" +
 
                     "<div class='section'>Information of all matches happening today</div>" +
 
