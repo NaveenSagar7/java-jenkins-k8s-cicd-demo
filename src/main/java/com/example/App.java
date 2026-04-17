@@ -14,10 +14,17 @@ public class App {
 
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
 
-    // Sonar fixes (constants)
+    // Constants (Sonar clean)
     private static final String HEADER_CONTENT_TYPE = "Content-Type";
     private static final String CONTENT_TYPE_HTML = "text/html; charset=UTF-8";
     private static final String CONTENT_TYPE_JSON = "application/json";
+
+    // Image URLs (no duplication)
+    private static final String MESSI_IMG =
+            "https://upload.wikimedia.org/wikipedia/commons/8/89/Leo_Messi_20180626.jpg";
+
+    private static final String RONALDO_IMG =
+            "https://upload.wikimedia.org/wikipedia/commons/8/8c/Cristiano_Ronaldo_2018.jpg";
 
     public static void main(String[] args) throws Exception {
         int port = 8081;
@@ -47,9 +54,11 @@ public class App {
 
                     "<style>" +
                     "body { margin:0; font-family:'Segoe UI',sans-serif; background:#020617; color:white; }" +
+
                     ".header { text-align:center; padding:25px; font-size:30px; font-weight:bold;" +
                     " background:linear-gradient(90deg,#22c55e,#4ade80); }" +
-                    ".container { max-width:800px; margin:30px auto; padding:10px; }" +
+
+                    ".container { max-width:800px; margin:30px auto; padding:10px; position:relative; }" +
 
                     ".card {" +
                     " background:rgba(255,255,255,0.05);" +
@@ -64,8 +73,8 @@ public class App {
 
                     ".teams { font-size:20px; font-weight:bold; margin-bottom:10px; }" +
                     ".score { font-size:28px; font-weight:bold; margin:10px 0; }" +
-                    ".status { font-size:13px; padding:6px 14px; border-radius:20px; display:inline-block; }" +
 
+                    ".status { font-size:13px; padding:6px 14px; border-radius:20px; display:inline-block; }" +
                     ".live { background:#22c55e; color:black; animation:pulse 1s infinite; }" +
                     ".delay { background:#f59e0b; color:black; }" +
                     ".soon { background:#3b82f6; }" +
@@ -73,7 +82,25 @@ public class App {
                     "@keyframes pulse { 0%{transform:scale(1);}50%{transform:scale(1.1);}100%{transform:scale(1);} }" +
 
                     ".time { font-size:12px; color:#94a3b8; margin-top:5px; }" +
+
                     ".footer { text-align:center; margin-top:40px; color:#64748b; font-size:12px; }" +
+
+                    /* 🔥 PLAYER IMAGES */
+                    ".player {" +
+                    " position:fixed;" +
+                    " top:120px;" +
+                    " width:180px;" +
+                    " opacity:0.9;" +
+                    " z-index:0;" +
+                    " filter:drop-shadow(0 0 20px rgba(34,197,94,0.6));" +
+                    "}" +
+
+                    ".left-player { left:10px; }" +
+                    ".right-player { right:10px; }" +
+
+                    "@media (max-width: 900px) {" +
+                    " .player { display:none; }" +
+                    "}" +
 
                     "</style>" +
 
@@ -81,6 +108,13 @@ public class App {
                     "<body>" +
 
                     "<div class='header'>⚽ Football Live</div>" +
+
+                    // 🔥 Messi (Left)
+                    "<img src='" + MESSI_IMG + "' class='player left-player'>" +
+
+                    // 🔥 Ronaldo (Right)
+                    "<img src='" + RONALDO_IMG + "' class='player right-player'>" +
+
                     "<div class='container' id='matches'></div>" +
                     "<div class='footer'>Live Updates • DevOps Powered ⚡</div>" +
 
