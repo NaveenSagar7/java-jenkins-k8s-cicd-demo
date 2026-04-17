@@ -21,7 +21,17 @@ pipeline {
             */
         stage('Build') {
             steps {
-                sh 'mvn clean package'
+                sh '''
+                echo "===== VERIFYING SOURCE CODE ====="
+                grep -i "30 MINUTES" -n src/main/java/com/example/App.java || true
+                '''
+
+                sh 'mvn clean package -U'
+
+                sh '''
+                echo "===== VERIFYING BUILT JAR ====="
+                jar tf target/*.jar | grep App.class
+                '''
             }
         }
 
