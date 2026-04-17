@@ -14,7 +14,7 @@ public class App {
 
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
 
-    // 🔥 Constants (fix Sonar duplication issue)
+    // Constants (Sonar fix)
     private static final String HEADER_CONTENT_TYPE = "Content-Type";
     private static final String CONTENT_TYPE_HTML = "text/html; charset=UTF-8";
     private static final String CONTENT_TYPE_JSON = "application/json";
@@ -31,7 +31,8 @@ public class App {
         server.setExecutor(null);
         server.start();
 
-        LOGGER.info("Server running on port " + port);
+        // Sonar-compliant logging
+        LOGGER.info(() -> String.format("Server running on port %d", port));
     }
 
     // ================= ROOT UI =================
