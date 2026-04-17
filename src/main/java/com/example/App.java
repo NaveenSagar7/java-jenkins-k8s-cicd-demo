@@ -14,17 +14,9 @@ public class App {
 
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
 
-    // Constants (Sonar clean)
     private static final String HEADER_CONTENT_TYPE = "Content-Type";
     private static final String CONTENT_TYPE_HTML = "text/html; charset=UTF-8";
     private static final String CONTENT_TYPE_JSON = "application/json";
-
-    // Image URLs (no duplication)
-    private static final String MESSI_IMG =
-            "https://upload.wikimedia.org/wikipedia/commons/8/89/Leo_Messi_20180626.jpg";
-
-    private static final String RONALDO_IMG =
-            "https://upload.wikimedia.org/wikipedia/commons/8/8c/Cristiano_Ronaldo_2018.jpg";
 
     public static void main(String[] args) throws Exception {
         int port = 8081;
@@ -41,7 +33,7 @@ public class App {
         LOGGER.info(() -> String.format("Server running on port %d", port));
     }
 
-    // ================= ROOT UI =================
+    // ================= ROOT =================
     static class RootHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
@@ -55,68 +47,142 @@ public class App {
                     "<style>" +
                     "body { margin:0; font-family:'Segoe UI',sans-serif; background:#020617; color:white; }" +
 
-                    ".header { text-align:center; padding:25px; font-size:30px; font-weight:bold;" +
+                    ".header { text-align:center; padding:20px; font-size:28px; font-weight:bold;" +
                     " background:linear-gradient(90deg,#22c55e,#4ade80); }" +
 
-                    ".container { max-width:800px; margin:30px auto; padding:10px; position:relative; }" +
+                    ".layout { display:flex; gap:20px; padding:20px; }" +
+
+                    ".left, .right {" +
+                    " width:20%;" +
+                    " background:rgba(255,255,255,0.05);" +
+                    " padding:15px;" +
+                    " border-radius:12px;" +
+                    " height:80vh;" +
+                    " overflow:auto;" +
+                    "}" +
+
+                    ".center { width:60%; }" +
 
                     ".card {" +
                     " background:rgba(255,255,255,0.05);" +
                     " border-radius:16px;" +
                     " padding:20px;" +
                     " margin-bottom:20px;" +
-                    " backdrop-filter:blur(12px);" +
                     " box-shadow:0 8px 25px rgba(0,0,0,0.6);" +
-                    " transition:0.3s; }" +
+                    "}" +
 
-                    ".card:hover { transform:scale(1.02); box-shadow:0 10px 40px rgba(34,197,94,0.4); }" +
+                    ".teams { font-size:18px; font-weight:bold; }" +
+                    ".score { font-size:26px; margin:10px 0; }" +
 
-                    ".teams { font-size:20px; font-weight:bold; margin-bottom:10px; }" +
-                    ".score { font-size:28px; font-weight:bold; margin:10px 0; }" +
-
-                    ".status { font-size:13px; padding:6px 14px; border-radius:20px; display:inline-block; }" +
-                    ".live { background:#22c55e; color:black; animation:pulse 1s infinite; }" +
+                    ".status { padding:5px 12px; border-radius:20px; font-size:12px; }" +
+                    ".live { background:#22c55e; color:black; }" +
                     ".delay { background:#f59e0b; color:black; }" +
                     ".soon { background:#3b82f6; }" +
 
-                    "@keyframes pulse { 0%{transform:scale(1);}50%{transform:scale(1.1);}100%{transform:scale(1);} }" +
+                    ".panel-title { font-weight:bold; margin-bottom:10px; }" +
+                    ".item { margin-bottom:8px; font-size:14px; }" +
 
-                    ".time { font-size:12px; color:#94a3b8; margin-top:5px; }" +
-
-                    ".footer { text-align:center; margin-top:40px; color:#64748b; font-size:12px; }" +
-
-                    /* 🔥 PLAYER IMAGES */
-                    ".player {" +
-                    " position:fixed;" +
-                    " top:120px;" +
-                    " width:180px;" +
-                    " opacity:0.9;" +
-                    " z-index:0;" +
-                    " filter:drop-shadow(0 0 20px rgba(34,197,94,0.6));" +
+                    /* NEWS STYLES */
+                    ".news-card {" +
+                    " background:rgba(255,255,255,0.06);" +
+                    " padding:12px;" +
+                    " border-radius:10px;" +
+                    " margin-bottom:12px;" +
+                    " transition:0.3s;" +
                     "}" +
 
-                    ".left-player { left:10px; }" +
-                    ".right-player { right:10px; }" +
+                    ".news-card:hover {" +
+                    " background:rgba(255,255,255,0.12);" +
+                    " transform:translateY(-2px);" +
+                    "}" +
 
-                    "@media (max-width: 900px) {" +
-                    " .player { display:none; }" +
+                    ".news-title {" +
+                    " font-size:14px;" +
+                    " font-weight:bold;" +
+                    " margin-bottom:6px;" +
+                    "}" +
+
+                    ".news-desc {" +
+                    " font-size:12px;" +
+                    " color:#cbd5f5;" +
+                    " margin-bottom:6px;" +
+                    "}" +
+
+                    ".read-more {" +
+                    " font-size:11px;" +
+                    " color:#22c55e;" +
+                    " cursor:default;" +
+                    "}" +
+
+                    "@media(max-width:900px) {" +
+                    " .layout { flex-direction:column; }" +
+                    " .left, .right, .center { width:100%; }" +
                     "}" +
 
                     "</style>" +
-
                     "</head>" +
+
                     "<body>" +
 
-                    "<div class='header'>⚽ Football Live</div>" +
+                    "<div class='header'>⚽ Football Live Dashboard</div>" +
 
-                    // 🔥 Messi (Left)
-                    "<img src='" + MESSI_IMG + "' class='player left-player'>" +
+                    "<div class='layout'>" +
 
-                    // 🔥 Ronaldo (Right)
-                    "<img src='" + RONALDO_IMG + "' class='player right-player'>" +
+                    // LEFT PANEL
+                    "<div class='left'>" +
+                    "<div class='panel-title'>Champions League Teams</div>" +
+                    "<div class='item'>Real Madrid</div>" +
+                    "<div class='item'>Barcelona</div>" +
+                    "<div class='item'>Bayern Munich</div>" +
+                    "<div class='item'>PSG</div>" +
+                    "<div class='item'>Man City</div>" +
+                    "<div class='item'>Arsenal</div>" +
+                    "<div class='item'>Inter Milan</div>" +
+                    "<div class='item'>AC Milan</div>" +
+                    "<div class='item'>Dortmund</div>" +
+                    "<div class='item'>Napoli</div>" +
+                    "</div>" +
 
-                    "<div class='container' id='matches'></div>" +
-                    "<div class='footer'>Live Updates • DevOps Powered ⚡</div>" +
+                    // CENTER
+                    "<div class='center' id='matches'></div>" +
+
+                    // RIGHT PANEL (NEWS)
+                    "<div class='right'>" +
+                    "<div class='panel-title'>Latest Football News</div>" +
+
+                    "<div class='news-card'>" +
+                    "<div class='news-title'>🌍 FIFA World Cup 2026 approaching</div>" +
+                    "<div class='news-desc'>Preparations intensify as teams gear up for June 8 kickoff.</div>" +
+                    "<div class='read-more'>Read more →</div>" +
+                    "</div>" +
+
+                    "<div class='news-card'>" +
+                    "<div class='news-title'>🔥 Mbappe unstoppable this season</div>" +
+                    "<div class='news-desc'>Goal scoring form making him the most dangerous forward.</div>" +
+                    "<div class='read-more'>Read more →</div>" +
+                    "</div>" +
+
+                    "<div class='news-card'>" +
+                    "<div class='news-title'>🚑 Ekitike injury setback</div>" +
+                    "<div class='news-desc'>Young striker ruled out for months after serious injury.</div>" +
+                    "<div class='read-more'>Read more →</div>" +
+                    "</div>" +
+
+                    "<div class='news-card'>" +
+                    "<div class='news-title'>⚪ Madrid rebuild incoming?</div>" +
+                    "<div class='news-desc'>Big tactical and squad changes expected next season.</div>" +
+                    "<div class='read-more'>Read more →</div>" +
+                    "</div>" +
+
+                    "<div class='news-card'>" +
+                    "<div class='news-title'>👔 Next Madrid manager?</div>" +
+                    "<div class='news-desc'>Club exploring options for future leadership.</div>" +
+                    "<div class='read-more'>Read more →</div>" +
+                    "</div>" +
+
+                    "</div>" +
+
+                    "</div>" +
 
                     "<script>" +
                     "let matches = [" +
@@ -135,7 +201,6 @@ public class App {
                     "<div class='status ${m.status}'>" +
                     "${m.status==='live'?'LIVE':m.status==='delay'?'DELAYED':'STARTING SOON'}" +
                     "</div>" +
-                    "<div class='time'>Updated: ${new Date().toLocaleTimeString()}</div>" +
                     "</div>`;" +
                     "});" +
                     "document.getElementById('matches').innerHTML = html;" +
@@ -163,7 +228,6 @@ public class App {
     static class HealthHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-
             String response = "{ \"status\": \"UP\" }";
             byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
 
@@ -180,7 +244,6 @@ public class App {
     static class InfoHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-
             String response = "{ \"app\": \"football-live\", \"version\": \"2.0\", \"env\": \"dev\" }";
             byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
 
