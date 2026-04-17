@@ -93,7 +93,7 @@ public class App {
                     "</div>" +
 
                     "<div class='footer'>" +
-                    "Developed by Naveen and Team - A DevOps Community" +
+                    "Developed by Team - A DevOps Community" +
                     "</div>" +
 
                     "</body>" +
