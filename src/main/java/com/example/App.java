@@ -72,7 +72,7 @@ public class App {
 
                     "<div class='card'>" +
                     "<div class='match'>Real Madrid vs Barcelona</div>" +
-                    "<div class='live'>Live</div>" +
+                    "<div class='live'>Match Delayed</div>" +
                     "</div>" +
 
                     "<div class='card'>" +
