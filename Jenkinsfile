@@ -71,15 +71,8 @@ pipeline {
             steps {
                 sshagent(['kubernetes-key']) {
                     sh """
-                    ssh -o StrictHostKeyChecking=no ${USER}@${VM_IP} << EOF
-                    kubectl apply -f deployment.yaml
-
-                    if ! kubectl rollout status deployment/java-demo; then
-                        echo "Deployment failed. Rolling back..."
-                        kubectl rollout undo deployment/java-demo
-                        exit 1
-                    fi
-                    EOF
+                    scp -o StrictHostKeyChecking=no deployment.yaml ${USER}@${VM_IP}:/home/${USER}/deployment.yaml
+                    ssh -o StrictHostKeyChecking=no ${USER}@${VM_IP} "kubectl apply -f deployment.yaml"
                     """
                 }
                 
