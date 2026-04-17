@@ -138,7 +138,7 @@ public class App {
 
             "<div class='card'>" +
             "<div class='match'>Man United vs Liverpool</div>" +
-            "<span class='badge live'>LIVE</span>" +
+            "<span class='badge live'>30 MINUTES TO GO</span>" +
             "</div>" +
 
             "<div class='card'>" +
