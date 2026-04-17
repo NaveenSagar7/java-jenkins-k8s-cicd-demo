@@ -56,7 +56,7 @@ pipeline {
         stage('Update Manifest') {
             steps {
                 sh "./scripts/update_image.sh $VERSION"
-                cat 'deployment.yaml'
+                sh "cat deployment.yaml"
             }
         }
 
