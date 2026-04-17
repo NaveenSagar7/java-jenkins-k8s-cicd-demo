@@ -31,96 +31,127 @@ public class App {
         public void handle(HttpExchange exchange) throws IOException {
 
             String response =
-                    "<html>" +
-                    "<head>" +
-                    "<title>Football Live</title>" +
-                    "<meta name='viewport' content='width=device-width, initial-scale=1'>" +
+            "<html>" +
+            "<head>" +
+            "<title>Football Live</title>" +
 
-                    "<style>" +
+            "<meta name='viewport' content='width=device-width, initial-scale=1'>" +
 
-                    "body { margin:0; font-family:'Segoe UI',sans-serif; background:#020617; color:white; }" +
+            "<style>" +
 
-                    ".header { text-align:center; padding:25px; font-size:30px; font-weight:bold;" +
-                    " background:linear-gradient(90deg,#22c55e,#4ade80); }" +
+            "body {" +
+            " margin:0; font-family:'Segoe UI',sans-serif;" +
+            " background: linear-gradient(135deg,#0f172a,#020617);" +
+            " color:white; overflow-x:hidden; }" +
 
-                    ".container { max-width:800px; margin:30px auto; padding:10px; }" +
+            /* HEADER */
+            ".header {" +
+            " text-align:center; padding:30px;" +
+            " font-size:32px; font-weight:bold;" +
+            " background: linear-gradient(90deg,#22c55e,#16a34a);" +
+            " letter-spacing:1px;" +
+            "}" +
 
-                    ".card {" +
-                    " background:rgba(255,255,255,0.05);" +
-                    " border-radius:16px;" +
-                    " padding:20px;" +
-                    " margin-bottom:20px;" +
-                    " backdrop-filter:blur(12px);" +
-                    " box-shadow:0 8px 25px rgba(0,0,0,0.6);" +
-                    " transition:0.3s; }" +
+            /* SUBTEXT */
+            ".subtext {" +
+            " text-align:center; margin-top:10px;" +
+            " color:#94a3b8; font-size:15px;" +
+            "}" +
 
-                    ".card:hover { transform:scale(1.02); box-shadow:0 10px 40px rgba(34,197,94,0.4); }" +
+            /* CONTAINER */
+            ".container {" +
+            " max-width:700px; margin:40px auto; padding:10px;" +
+            "}" +
 
-                    ".teams { font-size:20px; font-weight:bold; margin-bottom:10px; }" +
+            /* CARD */
+            ".card {" +
+            " background: rgba(255,255,255,0.05);" +
+            " backdrop-filter: blur(10px);" +
+            " padding:20px;" +
+            " margin-bottom:20px;" +
+            " border-radius:15px;" +
+            " box-shadow:0 8px 30px rgba(0,0,0,0.6);" +
+            " transition:0.3s;" +
+            " border:1px solid rgba(255,255,255,0.08);" +
+            "}" +
 
-                    ".score { font-size:28px; font-weight:bold; margin:10px 0; }" +
+            ".card:hover {" +
+            " transform: translateY(-5px) scale(1.02);" +
+            " box-shadow:0 12px 40px rgba(34,197,94,0.4);" +
+            "}" +
 
-                    ".status { font-size:13px; padding:6px 14px; border-radius:20px; display:inline-block; }" +
+            /* MATCH TITLE */
+            ".match {" +
+            " font-size:20px; font-weight:bold;" +
+            " margin-bottom:10px;" +
+            "}" +
 
-                    ".live { background:#22c55e; color:black; animation:pulse 1s infinite; }" +
-                    ".delay { background:#f59e0b; color:black; }" +
-                    ".soon { background:#3b82f6; }" +
+            /* STATUS BADGES */
+            ".badge {" +
+            " display:inline-block;" +
+            " padding:5px 12px;" +
+            " border-radius:20px;" +
+            " font-size:13px;" +
+            " font-weight:bold;" +
+            "}" +
 
-                    "@keyframes pulse {" +
-                    " 0% { transform:scale(1); }" +
-                    " 50% { transform:scale(1.1); }" +
-                    " 100% { transform:scale(1); } }" +
+            ".live { background:#22c55e; color:black; }" +
+            ".delay { background:#f59e0b; color:black; }" +
+            ".soon { background:#3b82f6; color:white; }" +
 
-                    ".time { font-size:12px; color:#94a3b8; margin-top:5px; }" +
+            /* FOOTER */
+            ".footer {" +
+            " text-align:center; margin-top:40px;" +
+            " color:#64748b; font-size:13px;" +
+            "}" +
 
-                    ".footer { text-align:center; margin-top:40px; color:#64748b; font-size:12px; }" +
+            /* ANIMATION BACKGROUND GLOW */
+            ".glow {" +
+            " position:fixed; width:500px; height:500px;" +
+            " background:radial-gradient(circle,#22c55e33,transparent);" +
+            " top:-100px; left:-100px; filter:blur(80px);" +
+            "}" +
 
-                    "</style>" +
+            "</style>" +
 
-                    "</head>" +
+            "</head>" +
 
-                    "<body>" +
+            "<body>" +
 
-                    "<div class='header'>⚽ Football Live</div>" +
+            "<div class='glow'></div>" +
 
-                    "<div class='container' id='matches'></div>" +
+            "<div class='header'>⚽ Football Live</div>" +
 
-                    "<div class='footer'>Live Football Updates • DevOps Powered ⚡</div>" +
+            "<div class='subtext'>Real-time match insights • Never miss a moment</div>" +
 
-                    "<script>" +
+            "<div class='container'>" +
 
-                    // Simulated match data
-                    "let matches = [" +
-                    "{teams:'Real Madrid vs Barcelona', status:'delay', score:'-- : --'}," +
-                    "{teams:'Arsenal vs Man City', status:'live', score:'2 : 1'}," +
-                    "{teams:'Man United vs Liverpool', status:'live', score:'1 : 1'}," +
-                    "{teams:'Bayern vs Dortmund', status:'soon', score:'-- : --'}" +
-                    "];" +
+            "<div class='card'>" +
+            "<div class='match'>Real Madrid vs Barcelona</div>" +
+            "<span class='badge delay'>Delayed</span>" +
+            "</div>" +
 
-                    "function render() {" +
-                    "let html='';" +
+            "<div class='card'>" +
+            "<div class='match'>Arsenal vs Man City</div>" +
+            "<span class='badge live'>LIVE</span>" +
+            "</div>" +
 
-                    "matches.forEach(m => {" +
-                    "html += `<div class='card'>" +
-                    "<div class='teams'>${m.teams}</div>" +
-                    "<div class='score'>${m.score}</div>" +
-                    "<div class='status ${m.status}'>" +
-                    "${m.status==='live'?'LIVE':m.status==='delay'?'DELAYED':'STARTING SOON'}" +
-                    "</div>" +
-                    "<div class='time'>Updated: ${new Date().toLocaleTimeString()}</div>" +
-                    "</div>`;" +
-                    "});" +
+            "<div class='card'>" +
+            "<div class='match'>Man United vs Liverpool</div>" +
+            "<span class='badge live'>LIVE</span>" +
+            "</div>" +
 
-                    "document.getElementById('matches').innerHTML = html;" +
-                    "}" +
+            "<div class='card'>" +
+            "<div class='match'>Bayern vs Dortmund</div>" +
+            "<span class='badge soon'>Starting Soon</span>" +
+            "</div>" +
 
-                    "setInterval(render,5000);" +
-                    "render();" +
+            "</div>" +
 
-                    "</script>" +
+            "<div class='footer'>Built with ❤️ DevOps + Java • CI/CD Powered</div>" +
 
-                    "</body>" +
-                    "</html>";
+            "</body>" +
+            "</html>";
 
             exchange.sendResponseHeaders(200, response.length());
             OutputStream os = exchange.getResponseBody();
@@ -134,7 +165,6 @@ public class App {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
             String response = "{ \"status\": \"UP\" }";
-            exchange.getResponseHeaders().add("Content-Type", "application/json");
             exchange.sendResponseHeaders(200, response.length());
             exchange.getResponseBody().write(response.getBytes());
             exchange.close();
@@ -145,8 +175,7 @@ public class App {
     static class InfoHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            String response = "{ \"app\": \"football-live\", \"version\": \"2.0\", \"env\": \"dev\" }";
-            exchange.getResponseHeaders().add("Content-Type", "application/json");
+            String response = "{ \"app\": \"football-live\", \"version\": \"1.0\" }";
             exchange.sendResponseHeaders(200, response.length());
             exchange.getResponseBody().write(response.getBytes());
             exchange.close();
