@@ -68,7 +68,7 @@ pipeline {
         
         stage('Deploy to Kubernetes on a minikube cluster in a different vm') {
             steps {
-                sshagent(['kuberenetes-key']) {
+                sshagent(['kubernetes-key']) {
                     sh '''
                     ssh -o StrictHostKeyChecking=no ${USER}@${VM_IP} << 'EOF'
 
@@ -87,6 +87,7 @@ pipeline {
                     '''
                 }
                 
+            }
         }
     }
 }
