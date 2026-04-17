@@ -62,7 +62,8 @@ pipeline {
 
         stage('Run in Docker container in the jenkins agent') {
             steps {
-                sh "docker run -d -p 8081:8081 $DOCKER_IMAGE:$VERSION"
+                sh "docker rm -f java-demo || true" // Remove existing container if it exists
+                sh "docker run -d --name java-demo -p 8081:8081 $DOCKER_IMAGE:$VERSION" 
             }
         }
         
