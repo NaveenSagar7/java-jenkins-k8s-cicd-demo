@@ -31,73 +31,127 @@ public class App {
         public void handle(HttpExchange exchange) throws IOException {
 
             String response =
-                    "<html>" +
-                    "<head>" +
-                    "<title>Football Live</title>" +
+            "<html>" +
+            "<head>" +
+            "<title>Football Live</title>" +
 
-                    "<style>" +
-                    "body { margin:0; font-family:Segoe UI; background:linear-gradient(135deg,#0f172a,#1e293b); color:white; }" +
+            "<meta name='viewport' content='width=device-width, initial-scale=1'>" +
 
-                    ".header { text-align:center; padding:30px 20px; background:#16a34a; font-size:28px; font-weight:bold; }" +
+            "<style>" +
 
-                    ".subtext { text-align:center; font-size:16px; color:#cbd5f5; margin-top:10px; }" +
+            "body {" +
+            " margin:0; font-family:'Segoe UI',sans-serif;" +
+            " background: linear-gradient(135deg,#0f172a,#020617);" +
+            " color:white; overflow-x:hidden; }" +
 
-                    ".section { text-align:center; margin-top:30px; font-size:18px; color:#94a3b8; }" +
+            /* HEADER */
+            ".header {" +
+            " text-align:center; padding:30px;" +
+            " font-size:32px; font-weight:bold;" +
+            " background: linear-gradient(90deg,#22c55e,#16a34a);" +
+            " letter-spacing:1px;" +
+            "}" +
 
-                    ".container { padding:20px; max-width:600px; margin:auto; }" +
+            /* SUBTEXT */
+            ".subtext {" +
+            " text-align:center; margin-top:10px;" +
+            " color:#94a3b8; font-size:15px;" +
+            "}" +
 
-                    ".card { background:#1e293b; padding:20px; margin-bottom:15px; border-radius:12px; " +
-                    "box-shadow:0 4px 15px rgba(0,0,0,0.5); transition:0.3s; }" +
+            /* CONTAINER */
+            ".container {" +
+            " max-width:700px; margin:40px auto; padding:10px;" +
+            "}" +
 
-                    ".card:hover { transform:scale(1.03); }" +
+            /* CARD */
+            ".card {" +
+            " background: rgba(255,255,255,0.05);" +
+            " backdrop-filter: blur(10px);" +
+            " padding:20px;" +
+            " margin-bottom:20px;" +
+            " border-radius:15px;" +
+            " box-shadow:0 8px 30px rgba(0,0,0,0.6);" +
+            " transition:0.3s;" +
+            " border:1px solid rgba(255,255,255,0.08);" +
+            "}" +
 
-                    ".match { font-size:18px; font-weight:bold; margin-bottom:8px; }" +
+            ".card:hover {" +
+            " transform: translateY(-5px) scale(1.02);" +
+            " box-shadow:0 12px 40px rgba(34,197,94,0.4);" +
+            "}" +
 
-                    ".live { color:#22c55e; font-weight:bold; }" +
+            /* MATCH TITLE */
+            ".match {" +
+            " font-size:20px; font-weight:bold;" +
+            " margin-bottom:10px;" +
+            "}" +
 
-                    ".footer { text-align:center; margin-top:40px; font-size:14px; color:#94a3b8; }" +
-                    "</style>" +
+            /* STATUS BADGES */
+            ".badge {" +
+            " display:inline-block;" +
+            " padding:5px 12px;" +
+            " border-radius:20px;" +
+            " font-size:13px;" +
+            " font-weight:bold;" +
+            "}" +
 
-                    "</head>" +
+            ".live { background:#22c55e; color:black; }" +
+            ".delay { background:#f59e0b; color:black; }" +
+            ".soon { background:#3b82f6; color:white; }" +
 
-                    "<body>" +
+            /* FOOTER */
+            ".footer {" +
+            " text-align:center; margin-top:40px;" +
+            " color:#64748b; font-size:13px;" +
+            "}" +
 
-                    "<div class='header'>Football Live</div>" +
+            /* ANIMATION BACKGROUND GLOW */
+            ".glow {" +
+            " position:fixed; width:500px; height:500px;" +
+            " background:radial-gradient(circle,#22c55e33,transparent);" +
+            " top:-100px; left:-100px; filter:blur(80px);" +
+            "}" +
 
-                    "<div class='subtext'>Welcome to Football Live where you do not miss any update !</div>" +
+            "</style>" +
 
-                    "<div class='section'>Information of all matches happening today in Champions League</div>" +
+            "</head>" +
 
-                    "<div class='container'>" +
+            "<body>" +
 
-                    "<div class='card'>" +
-                    "<div class='match'>Real Madrid vs Barcelona</div>" +
-                    "<div class='live'>Match Delayed</div>" +
-                    "</div>" +
+            "<div class='glow'></div>" +
 
-                    "<div class='card'>" +
-                    "<div class='match'>Arsenal vs Man City</div>" +
-                    "<div class='live'>Live</div>" +
-                    "</div>" +
+            "<div class='header'>⚽ Football Live</div>" +
 
-                    "<div class='card'>" +
-                    "<div class='match'>Man United vs Liverpool</div>" +
-                    "<div class='live'>Live</div>" +
-                    "</div>" +
+            "<div class='subtext'>Real-time match insights • Never miss a moment</div>" +
 
-                    "<div class='card'>" +
-                    "<div class='match'>Bayern vs Dortmund</div>" +
-                    "<div class='live'>Starting Soon</div>" +
-                    "</div>" +
+            "<div class='container'>" +
 
-                    "</div>" +
+            "<div class='card'>" +
+            "<div class='match'>Real Madrid vs Barcelona</div>" +
+            "<span class='badge delay'>Delayed</span>" +
+            "</div>" +
 
-                    "<div class='footer'>" +
-                    "Developed by Team - A DevOps Community" +
-                    "</div>" +
+            "<div class='card'>" +
+            "<div class='match'>Arsenal vs Man City</div>" +
+            "<span class='badge live'>LIVE</span>" +
+            "</div>" +
 
-                    "</body>" +
-                    "</html>";
+            "<div class='card'>" +
+            "<div class='match'>Man United vs Liverpool</div>" +
+            "<span class='badge live'>LIVE</span>" +
+            "</div>" +
+
+            "<div class='card'>" +
+            "<div class='match'>Bayern vs Dortmund</div>" +
+            "<span class='badge soon'>Starting Soon</span>" +
+            "</div>" +
+
+            "</div>" +
+
+            "<div class='footer'>Built with ❤️ DevOps + Java • CI/CD Powered</div>" +
+
+            "</body>" +
+            "</html>";
 
             exchange.sendResponseHeaders(200, response.length());
             OutputStream os = exchange.getResponseBody();

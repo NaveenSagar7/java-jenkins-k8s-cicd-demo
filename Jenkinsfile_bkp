@@ -57,36 +57,47 @@ pipeline {
             }
         }
 
-
-        stage('Run in Docker container in the jenkins agent') {
+        /*
+        stage('Optional : Run in Docker container in the jenkins agent') {
             steps {
                 sh "docker run -d -p 8081:8081 $DOCKER_IMAGE:$VERSION"
             }
         }
-        /*
-        stage('Deploy to Kubernetes') {
-            steps {
-                sh "kubectl apply -f deployment.yaml"
-            }
-        }
-        stage('Verify Deployment') {
-            steps {
-                sh "kubectl rollout status deployment/java-demo"
-            }
-        }
-
-        stage('Rollback if Failed') {
-            steps {
-                script {
-                    def status = sh(script: "kubectl rollout status deployment/java-demo", returnStatus: true)
+        */
         
-                    if (status != 0) {
-                        sh "kubectl rollout undo deployment/java-demo"
-                        error "Deployment failed. Rolled back."
-                    }
+        stage('Deploy to EKS') {
+            steps {
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-cred'
+                ]]) {
+
+                    sh '''
+                    set -e
+
+                    # Configure kubeconfig
+                    aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
+
+                    # Verify access
+                    kubectl get nodes
+
+                    # Apply deployment
+                    kubectl apply -f deployment.yaml
+
+                    # Rollout with failure handling
+                    if ! kubectl rollout status deployment/java-demo --timeout=120s; then
+                        echo "Deployment failed. Rolling back..."
+
+                        kubectl rollout undo deployment/java-demo
+
+                        kubectl rollout status deployment/java-demo --timeout=120s
+
+                        exit 1
+                    fi
+                    '''
                 }
             }
         }
-            */
+            
     }
 }
