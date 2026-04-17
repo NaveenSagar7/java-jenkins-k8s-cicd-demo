@@ -70,22 +70,17 @@ pipeline {
         stage('Deploy to Kubernetes on a minikube cluster in a different vm') {
             steps {
                 sshagent(['kubernetes-key']) {
-                    sh '''
-                    ssh -o StrictHostKeyChecking=no ${USER}@${VM_IP} << 'EOF'
-
+                    sh """
+                    ssh -o StrictHostKeyChecking=no ${USER}@${VM_IP} << EOF
                     kubectl apply -f deployment.yaml
 
-                    kubectl rollout status deployment/java-demo
-                    STATUS=$?
-
-                    if [ $STATUS -ne 0 ]; then
+                    if ! kubectl rollout status deployment/java-demo; then
                         echo "Deployment failed. Rolling back..."
                         kubectl rollout undo deployment/java-demo
                         exit 1
                     fi
-
                     EOF
-                    '''
+                    """
                 }
                 
             }
