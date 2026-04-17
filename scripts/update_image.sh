@@ -2,4 +2,4 @@
 
 VERSION=$1
 
-sed -i "s|image:.*|image: dockerhub-user/java-demo:$VERSION|g" deployment.yaml
+sed -i "s|image:.*|image: naveen352/java-demo:$VERSION|g" deployment.yaml
