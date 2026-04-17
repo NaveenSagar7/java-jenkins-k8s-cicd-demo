@@ -41,7 +41,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t $DOCKER_IMAGE:$VERSION ."
+                sh "docker build --no-cache -t $DOCKER_IMAGE:$VERSION ."
             }
         }
 
