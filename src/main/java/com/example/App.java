@@ -85,7 +85,7 @@ public class App {
 
                     "<div class='container' id='matches'></div>" +
 
-                    "<div class='footer'>Live Updates • DevOps Powered ⚡</div>" +
+                    "<div class='footer'>Live Football Updates • DevOps Powered ⚡</div>" +
 
                     "<script>" +
 
