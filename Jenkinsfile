@@ -6,8 +6,6 @@ pipeline {
         DOCKERHUB_USER = "naveen352"
         DOCKER_IMAGE = "${DOCKERHUB_USER}/java-demo"
         VERSION = "v${BUILD_NUMBER}"
-        USER = "ubuntu"
-        VM_IP = "172.31.31.200"
 
     }
 
@@ -21,17 +19,7 @@ pipeline {
             */
         stage('Build') {
             steps {
-                sh '''
-                echo "===== VERIFYING SOURCE CODE ====="
-                grep -i "30 MINUTES" -n src/main/java/com/example/App.java || true
-                '''
-
-                sh 'mvn clean package -U'
-
-                sh '''
-                echo "===== VERIFYING BUILT JAR ====="
-                jar tf target/*.jar | grep App.class
-                '''
+                sh 'mvn clean package'
             }
         }
 
@@ -51,7 +39,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build --no-cache -t $DOCKER_IMAGE:$VERSION ."
+                sh "docker build -t $DOCKER_IMAGE:$VERSION ."
             }
         }
 
@@ -66,28 +54,39 @@ pipeline {
         stage('Update Manifest') {
             steps {
                 sh "./scripts/update_image.sh $VERSION"
-                sh "cat deployment.yaml"
             }
         }
 
-
-        stage('Run in Docker container in the jenkins agent') {
+        /*
+        stage('Optional : Run in Docker container in the jenkins agent') {
             steps {
-                sh "docker rm -f java-demo || true" // Remove existing container if it exists
-                sh "docker run -d --name java-demo -p 8081:8081 $DOCKER_IMAGE:$VERSION" 
+                sh "docker run -d -p 8081:8081 $DOCKER_IMAGE:$VERSION"
             }
         }
+        */
         
-        stage('Deploy to Kubernetes on a minikube cluster in a different vm') {
+        stage('Deploy to Kubernetes') {
             steps {
-                sshagent(['kubernetes-key']) {
-                    sh """
-                    scp -o StrictHostKeyChecking=no deployment.yaml ${USER}@${VM_IP}:/home/${USER}/deployment.yaml
-                    ssh -o StrictHostKeyChecking=no ${USER}@${VM_IP} "kubectl apply -f deployment.yaml"
-                    """
+                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                    sh '''
+                    echo "===== DEPLOYING TO REAL K8s CLUSTER ====="
+
+                    kubectl config get-contexts
+                    kubectl get nodes
+
+                    kubectl apply -f deployment.yaml
+
+                    kubectl rollout status deployment/java-demo
+
+                    if [$? -ne 0 ]; then
+                        echo "Deployment failed, rolling back..."
+                        kubectl rollout undo deployment/java-demo
+                        exit 1
+                    fi
+                    '''
                 }
-                
             }
         }
+            
     }
 }

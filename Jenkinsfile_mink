@@ -6,6 +6,8 @@ pipeline {
         DOCKERHUB_USER = "naveen352"
         DOCKER_IMAGE = "${DOCKERHUB_USER}/java-demo"
         VERSION = "v${BUILD_NUMBER}"
+        USER = "ubuntu"
+        VM_IP = "172.31.31.200"
 
     }
 
@@ -19,7 +21,17 @@ pipeline {
             */
         stage('Build') {
             steps {
-                sh 'mvn clean package'
+                sh '''
+                echo "===== VERIFYING SOURCE CODE ====="
+                grep -i "30 MINUTES" -n src/main/java/com/example/App.java || true
+                '''
+
+                sh 'mvn clean package -U'
+
+                sh '''
+                echo "===== VERIFYING BUILT JAR ====="
+                jar tf target/*.jar | grep App.class
+                '''
             }
         }
 
@@ -39,7 +51,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t $DOCKER_IMAGE:$VERSION ."
+                sh "docker build --no-cache -t $DOCKER_IMAGE:$VERSION ."
             }
         }
 
@@ -54,50 +66,28 @@ pipeline {
         stage('Update Manifest') {
             steps {
                 sh "./scripts/update_image.sh $VERSION"
+                sh "cat deployment.yaml"
             }
         }
 
-        /*
-        stage('Optional : Run in Docker container in the jenkins agent') {
+
+        stage('Run in Docker container in the jenkins agent') {
             steps {
-                sh "docker run -d -p 8081:8081 $DOCKER_IMAGE:$VERSION"
+                sh "docker rm -f java-demo || true" // Remove existing container if it exists
+                sh "docker run -d --name java-demo -p 8081:8081 $DOCKER_IMAGE:$VERSION" 
             }
         }
-        */
         
-        stage('Deploy to EKS') {
+        stage('Deploy to Kubernetes on a minikube cluster in a different vm') {
             steps {
-                withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-cred'
-                ]]) {
-
-                    sh '''
-                    set -e
-
-                    # Configure kubeconfig
-                    aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
-
-                    # Verify access
-                    kubectl get nodes
-
-                    # Apply deployment
-                    kubectl apply -f deployment.yaml
-
-                    # Rollout with failure handling
-                    if ! kubectl rollout status deployment/java-demo --timeout=120s; then
-                        echo "Deployment failed. Rolling back..."
-
-                        kubectl rollout undo deployment/java-demo
-
-                        kubectl rollout status deployment/java-demo --timeout=120s
-
-                        exit 1
-                    fi
-                    '''
+                sshagent(['kubernetes-key']) {
+                    sh """
+                    scp -o StrictHostKeyChecking=no deployment.yaml ${USER}@${VM_IP}:/home/${USER}/deployment.yaml
+                    ssh -o StrictHostKeyChecking=no ${USER}@${VM_IP} "kubectl apply -f deployment.yaml"
+                    """
                 }
+                
             }
         }
-            
     }
 }
