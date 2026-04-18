@@ -6,11 +6,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
-    <artifactId>java-argocd-demo</artifactId>
+    <artifactId>java-cicd-demo</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>java-argocd-demo</name>
+    <name>java-cicd-demo</name>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

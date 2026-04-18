@@ -7,7 +7,7 @@ pipeline {
         DOCKER_IMAGE = "${DOCKERHUB_USER}/java-demo"
         VERSION = "v${BUILD_NUMBER}"
         USER = "ubuntu"
-        VM_IP = "172.31.34.119"
+        VM_IP = "172.31.31.200"
 
     }
 
